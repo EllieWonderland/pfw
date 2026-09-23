@@ -4,9 +4,9 @@ Stand: 21.09.2026 · Wintersemester 2026/27
 
 ## Unser Projekt
 
-Wir entwickeln zu zweit in Emden ein Multiplayer-Spiel. Unser aktueller Entwurf ist **Mastermind: Cipher Chase**. Das Thema müssen wir noch mit der Lehrperson abstimmen.
+Wir entwickeln ein Multiplayer-Spiel. Unser aktueller Entwurf ist **Mastermind: Cipher Chase**. Das Thema müssen wir noch mit der Lehrperson abstimmen.
 
-Wir bauen einen grafischen Client, der bei beiden Spielern läuft, einen Java-Server und eine relationale Datenbank. Beide Spielrollen stecken im selben Client. Eine zweite Client-Technologie brauchen wir für unser Zweierteam nicht.
+Wir bauen einen grafischen Client, der bei beiden Spielern läuft, einen Java-Server und eine relationale Datenbank. Beide Spielrollen stecken in ihren eigenen Clients. 
 
 Unser Ziel ist eine vollständige, gut erklärbare Anwendung mit überschaubarem Spielumfang. Neben dem Spiel brauchen wir Zeit für Konten, Lobby, Datenbank, Schnittstellen und die Abgaben.
 
@@ -81,7 +81,7 @@ Die folgenden Funktionen ergeben sich aus den Projektunterlagen. Bei den zusätz
 - Registrierung mit Benutzername und Passwort, Login und Logout funktionieren.
 - Spieler finden sich über eine Lobby und starten gemeinsam eine Partie.
 - Abgeschlossene Partien werden gespeichert. Jeder sieht seine Spielhistorie und einfache Auswertungen, etwa Siege und Niederlagen. Diese Spielhistorie ist getrennt von den Eingabespuren innerhalb einer Partie.
-- Bilder werden sinnvoll über die API übertragen und im Client angezeigt. Wir planen dafür Profilbild-Upload und -Abruf. Fest eingebaute Spielgrafiken allein reichen dafür nicht.
+- Bilder werden sinnvoll über die API übertragen und im Client angezeigt. Hierfür eignen sich zB Profilbild-Upload und -Abruf. Fest eingebaute Spielgrafiken allein reichen dafür nicht.
 - Alle Funktionen sind über die grafische Oberfläche bedienbar.
 
 Singleplayer, Chat, globale Ranglisten, KI-Gegner, mehrere Spielmodi und aufwendige Grafik gehören vorerst nicht zum Umfang.
@@ -101,7 +101,7 @@ Singleplayer, Chat, globale Ranglisten, KI-Gegner, mehrere Spielmodi und aufwend
 
 Wir orientieren uns zunächst am Leitfaden: Spring Boot, Spring Security mit JWT, JPA, Git und Maven. REST mit JSON verwenden wir für Konten, Profilbilder und Spielhistorie; WebSocket mit STOMP für Lobby und Spielaktionen. Die Versionen legen wir beim Projektstart fest.
 
-Die Client-Technologie ist noch offen. Die allgemeine Prüfungsbeschreibung nennt JavaFX als Standard und Android Java API als Alternative. Einen Web-Client wählen wir erst, wenn das für Emden geklärt ist. Bei Vue oder Angular verlangt der Leitfaden eine SPA.
+Die Client-Technologie ist noch offen. Die allgemeine Prüfungsbeschreibung nennt JavaFX als Standard und Android Java API als Alternative. Einen Web-Client wählen wir erst, wenn das geklärt ist. Bei Vue oder Angular verlangt der Leitfaden eine SPA.
 
 ### Zuständigkeiten im Spiel
 
@@ -112,11 +112,7 @@ Mögliche Ansatzpunkte für Patterns sind Spielphasen, Spielaktionen und Gadget-
 ### Mit der Lehrperson klären
 
 - Gilt der ausdrücklich auf Lübeck bezogene Leitfaden auch für uns in Emden? Das betrifft besonders die freie Client-Wahl und die zusätzlichen Vorgaben zu Spring Boot, Spring Security, STOMP, Git/Maven und Game-Engines.
-- Ist Cipher Chase als Thema in Ordnung?
-- Welche Regeln gelten für KI-Unterstützung sowie fremden Code und fremde Bilder oder Videos? Die vorliegenden Unterlagen regeln das nicht ausdrücklich.
-- Wie und zu welcher Uhrzeit geben wir ab? Wann ist die Prüfung und wie lange dauert die Präsentation?
-
-Game-Engines wie Unity sind im Leitfaden ausgeschlossen. Bis zur Klärung planen wir ohne Game-Engine. Absprachen mit unserer Lehrperson halten wir hier fest.
+- Ist Mastermind: Cipher Chase als Thema in Ordnung?
 
 ## Termine und Abgaben
 
@@ -144,33 +140,16 @@ Bewertet werden unter anderem Lauffähigkeit, Anforderungserfüllung, Codequalit
 
 ## Zusammenarbeit und nächste Schritte
 
-Die Namen, die Aufgabenverteilung, das Repository und einen regelmäßigen Abstimmungstermin tragen wir noch ein. Backend und Client können unsere Schwerpunkte sein; Datenmodell, Schnittstellen, Integration und gegenseitige Reviews machen wir gemeinsam. Beide sollen den Gesamtaufbau verstehen.
+Die Namen, die Aufgabenverteilung, das Repository und einen regelmäßigen Abstimmungstermin tragen wir noch ein. Alle sollen den Gesamtaufbau verstehen.
 
 Als Nächstes:
 
 - [ ] Offene Spielregeln durchgehen und eine Beispielpartie auf Papier spielen.
-- [ ] Thema und Vorgaben für Emden mit der Lehrperson klären.
 - [ ] Client-Technologie und übrige Werkzeuge festlegen.
 - [ ] Repository und startbare Projektstruktur einrichten.
 - [ ] Datenmodell und Schnittstellen gemeinsam entwerfen.
 - [ ] Früh einen vollständigen Weg von der Codeeingabe im Client bis zur Serverantwort bauen.
 
-Für einzelne Aufgaben reichen uns eine kurze Beschreibung, eine zuständige Person, ein Termin und ein klares Ergebnis. Die andere Person schaut die Änderung durch. Dokumentation und Integration laufen während der Entwicklung mit.
-
 Bisheriger Stand:
 
-- **21.09.2026:** Emden, Zweierteam und eine gemeinsame Client-Implementierung stehen fest.
-- **21.09.2026:** Cipher Chase als aktuellen Konzeptentwurf aufgenommen. Regelanpassungen und Themenfreigabe sind noch offen.
-
-## Frühere Ideen als Reserve
-
-- **Echo Shift:** Zwei Spieler lösen gemeinsam Rätsel in Vergangenheit und Zukunft desselben Gebäudes.
-- **Blackout Protocol:** Zwei Leitstellen stabilisieren gemeinsam ein kleines Stromnetz.
-- **Signal Heist:** Zwei rivalisierende Drohnen planen verdeckte Aktionen, die anschließend gemeinsam aufgelöst werden.
-- **Archiv der Lügen:** Zwei Spieler kombinieren unterschiedliche Beweise und rekonstruieren einen Vorfall.
-
-## Unterlagen
-
-- [Kursplan.pdf](Kursplan.pdf), S. 1: Termine und Meilensteine.
-- [Leitfaden.pdf](Leitfaden.pdf), vor allem S. 4–8: Funktionen, Technik, Abgaben und Bewertung. Bezieht sich auf TH Lübeck; Geltung für Emden noch klären.
-- [Softwareprojekt_Prüfungsleistung.pdf](Softwareprojekt_Prüfungsleistung.pdf), S. 1–4: Allgemeine Anforderungen und Prüfungsbeschreibung.
+- **22.09.2026:** Festlegung des Teams, erste Kurzabsprache bzgl. des Gameplays und der Arbeitsverteilung
