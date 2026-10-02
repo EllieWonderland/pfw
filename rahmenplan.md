@@ -62,13 +62,13 @@ Vor einer Umsetzung wären noch zu klären:
 - **Fingerabdruck:** Gilt er für den Code, an dem der Polizist gerade arbeitet, oder für den Code, an dem der Dieb gerade arbeitet?
 - **Dietrich:** Sieht der Polizist den vom Dieb aufgedeckten Hinweis später an derselben Tür?
 
-### Was wir an den Regeln noch klären müssen
+### Festgelegte MVP-Regeln und verbleibende Balancefragen
 
-- **Startpositionen:** Ein möglicher Start wäre Polizei vor Tür 1 und Dieb vor Tür 3. Dafür fehlen zunächst echte Spuren an den ersten beiden Türen.
-- **Zeit und Eingaben:** Wie lange dauert eine Partie? Gibt es eine Pause zwischen eigenen Versuchen oder ein Versuchslimit?
-- **History:** Die Spuren werden der Reihe nach einzeln gezeigt. Wann wird ein Versuch sichtbar und kann der Polizist bereits gelesene Versuche erneut ansehen?
-- **Gleichzeitige Ereignisse:** Was gilt, wenn Codeeingabe und Zeitablauf fast gleichzeitig eintreten? Entscheidet wie beim Einholen die Verarbeitungsreihenfolge auf dem Server? Einzelfälle müssen noch festgehalten werden.
-- **Abbruch und Verbindungsverlust:** Eine abgebrochene Partie wird mit dem Endgrund „abgebrochen" gespeichert und kann ohne Gewinner bleiben. Der Server merkt sich, ob ein Spieler verbunden ist. Zählt Verlassen als Niederlage? Gibt es eine Wartezeit für einen Reconnect?
+Die verbindlichen Festlegungen stehen in [team-und-schnittstellen.md](team-und-schnittstellen.md): Polizei startet vor Tür 1, Dieb vor Tür 3; zunächst 240 Sekunden Spielzeit, kein Versuchslimit und keine zusätzliche Eingabepause. Spuren sind sofort nach Auswertung verfügbar, werden chronologisch einzeln freigeschaltet und dürfen nach dem Lesen erneut angesehen werden. Der Server prüft den Zeitablauf vor jeder Aktion und verarbeitet die Ereignisse geordnet.
+
+Bewusstes Verlassen zählt als Niederlage. Bei Verbindungsverlust läuft der Countdown weiter; nach serverseitiger Erkennung bleiben 30 Sekunden für die Wiederverbindung. Danach wird eine noch laufende Partie ohne Gewinner abgebrochen. Ein vorheriges reguläres Spielende hat Vorrang.
+
+In Testpartien prüfen wir noch, ob Startvorsprung, Spielzeit und Zwei-Sekunden-Sperre ausgewogen sind. Änderungen werden gemeinsam beschlossen und in der Schnittstellenreferenz festgehalten.
 
 ### Umfang und erste Tests
 
@@ -116,13 +116,11 @@ Der Server verwaltet Warteschlange, Codes, Countdown, Positionen und Versuche. E
 
 Mögliche Ansatzpunkte für Patterns sind Spielphasen und Spielaktionen auf dem Server sowie die Trennung von Darstellung und Zustand in den Clients. Die konkrete Auswahl treffen wir bei der Modellierung.
 
-### Was wir technisch noch klären müssen
+### Technische Festlegungen und verbleibende Werkzeugfragen
 
-- **Spuren-Wartezeit:** Die zwei Sekunden pro Versuch setzt der Server durch, indem er die Versuche einzeln ausliefert und sich je Polizist merkt, welche Spur als nächste dran ist und ab wann. Bekäme der Client alle Spuren auf einmal, ließe sich die Sperre zum Beispiel im Web-Client über die Entwicklertools umgehen. Offen ist noch das Nachrichtenformat.
-- **Videos:** Wer erstellt sie? Werden sie mit den Clients ausgeliefert oder vom Server geladen? Welches Format spielen JavaFX und Browser beide ab, zum Beispiel MP4 mit H.264?
-- **JWT über STOMP:** Wie wird der Token beim Verbindungsaufbau übergeben? Was passiert, wenn er während einer Partie abläuft? Wo legt der Web-Client den JWT ab?
-- **Countdown:** Der Server legt beim Start einen festen Endzeitpunkt fest. Die Clients können ihre Anzeige daraus berechnen. Wie gehen wir mit abweichenden Client-Uhren um?
-- **Mehrfache Anmeldung:** Ein Konto kann höchstens einmal in der Warteschlange stehen oder in einer laufenden Partie sein. Darf es trotzdem gleichzeitig in beiden Clients angemeldet sein?
+Nachrichtenformate, JWT über STOMP, Zeitsynchronisation, Mehrfachanmeldung und Spurenfreigabe sind in [team-und-schnittstellen.md](team-und-schnittstellen.md) festgelegt. Der Server liefert Spuren einzeln und speichert den Lesefortschritt samt Freigabezeit. Die Clients berechnen den Countdown aus Endzeitpunkt und Serverzeit und korrigieren ihre Anzeige regelmäßig. Pro Konto ist nur eine aktive STOMP-Verbindung erlaubt.
+
+Noch festzulegen sind das Datenbankprodukt, die Frameworkversionen und die Medienproduktion. Für das erste spielbare MVP genügt eine kurze Türanimation. Falls später Videos ergänzt werden: Zuständigkeit, Auslieferung und ein in JavaFX und Browser getestetes Format gemeinsam festlegen.
 
 ## Termine und Abgaben
 
@@ -150,11 +148,13 @@ Bewertet werden unter anderem Lauffähigkeit, Anforderungserfüllung, Codequalit
 
 ## Zusammenarbeit und nächste Schritte
 
+Die verbindliche Rollenaufteilung, MVP-Regeln und REST-/STOMP-Schnittstellen stehen in [team-und-schnittstellen.md](team-und-schnittstellen.md). Diese Referenz ist für die Implementierung maßgeblich; Änderungen stimmen wir gemeinsam ab und halten sie dort fest.
+
 Jede Person übernimmt eine Komponente als Schwerpunkt:
 
-- **Server und Datenbank:** _Name offen_
-- **JavaFX-Client:** _Name offen_
-- **Vue.js-Client:** _Name offen_
+- **Server und Datenbank:** Manu
+- **JavaFX-Client:** Ti
+- **Vue.js-Client:** Jana
 
 Datenmodell, Schnittstellen, Integration und gegenseitige Reviews machen wir gemeinsam. Alle drei sollen den Gesamtaufbau verstehen. Die beiden Clients entstehen getrennt; Code wird zwischen ihnen nicht übernommen. Einen regelmäßigen Abstimmungstermin tragen wir noch ein.
 
@@ -162,7 +162,7 @@ Das Repository liegt künftig im GitLab der Hochschule.
 
 Als Nächstes:
 
-- [ ] Namen und Schwerpunkte eintragen.
+- [x] Namen und Schwerpunkte eintragen.
 - [ ] Offene Spielregeln durchgehen und eine Beispielpartie auf Papier spielen.
 - [ ] Übrige Werkzeuge festlegen.
 - [ ] Repository ins Hochschul-GitLab laden, sobald der Zugang da ist.
