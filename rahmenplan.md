@@ -1,6 +1,6 @@
 # Rahmenplan – Patterns and Frameworks
 
-Stand: 23.09.2026 · Wintersemester 2026/27
+Stand: 02.10.2026 · Wintersemester 2026/27
 
 ## Unser Projekt
 
@@ -8,15 +8,16 @@ Wir entwickeln zu dritt eine Abwandlung des Brettspielklassikers 'Mastermind' al
 
 Wir bauen einen Java-Server, eine relationale Datenbank und zwei grafische Clients: einen Desktop-Client mit JavaFX und einen Web-Client als Vue.js-SPA. Beide Clients nutzen dieselben Hochschulserver-Schnittstellen und bieten jeweils den vollen Funktionsumfang mit beiden Spielrollen. Deshalb können auch zwei Personen mit unterschiedlichen Clients gegeneinander spielen.
 
-Unser Ziel ist eine vollständige, gut erklärbare Anwendung mit überschaubarem Spielumfang. Neben dem Spiel brauchen wir Zeit für Konten, Lobby, Datenbank, Schnittstellen und die Abgaben. Da jede Funktion in zwei Clients umgesetzt wird, halten wir den Spielumfang bewusst klein.
+Unser Ziel ist eine vollständige, gut erklärbare Anwendung mit überschaubarem Spielumfang. Neben dem Spiel brauchen wir Zeit für Konten, Spielersuche, Datenbank, Schnittstellen und die Abgaben. Da jede Funktion in zwei Clients umgesetzt wird, halten wir den Spielumfang bewusst klein.
 
-## Spielidee: 'Megamind: Cipher Chase'
+## Spielidee: 'Mastermind: Cipher Chase'
 
 Ein Dieb flieht durch ein Gebäude, ein Polizist verfolgt ihn. Um Türen zu öffnen, knacken beide Zahlencodes nach dem Mastermind-Prinzip. Der Dieb hinterlässt seine bisherigen Eingaben als Spuren. Der Polizist entscheidet, ob er Zeit in diese Hinweise investiert oder selbst rätselt.
 
 ### Grundregeln
 
-- Es gibt insgesamt sechs Türen.
+- Die Rollen werden zufällig vergeben. Sobald zwei Spieler in der Warteschlange stehen, startet die Partie automatisch.
+- Es gibt insgesamt sechs Türen. Jeder Raum endet mit einer Tür: Raum 1 führt über Tür 1 zu Raum 2, Raum 2 über Tür 2 zu Raum 3 und so weiter.
 - Jeder Code besteht aus vier Zahlen zwischen 1 und 6. Zahlen dürfen mehrfach vorkommen.
 - Grün bedeutet: richtige Zahl an der richtigen Position. Orange bedeutet: richtige Zahl an der falschen Position.
 - Erst bei vier grünen Treffern öffnet sich die Tür.
@@ -25,6 +26,7 @@ Ein Dieb flieht durch ein Gebäude, ein Polizist verfolgt ihn. Um Türen zu öff
 - Der Dieb gewinnt, wenn er die letzte Tür vor Ablauf des Countdowns passiert.
 - Läuft der Countdown vorher ab, stürmt das SEK das Gebäude und die Polizei gewinnt.
 - Die Polizei gewinnt auch, sobald sie nach einer Türöffnung im selben Raum steht wie der Dieb. Öffnen beide fast gleichzeitig eine Tür, gilt die Reihenfolge, in der der Server die Eingaben verarbeitet.
+- Keine Rolle weiß, was die andere gerade tut. Der Polizist sieht weder Position noch aktuelle Eingaben des Diebs, der Dieb nicht die des Polizisten. Der Polizist erfährt nur über die Spuren etwas über die bisherigen Versuche des Diebs.
 
 ### Spuren und Eingabehistorie
 
@@ -41,29 +43,38 @@ Für die erste Umsetzung gilt:
 
 Damit lohnt sich die History nur, wenn die gewonnenen Informationen den Zeitaufwand ausgleichen. Ob zwei Sekunden pro Schritt passen, müssen wir ausprobieren.
 
-### Gadgets
+### Gadgets (Ausblick V1, nicht Teil der Abgabe)
+
+Gadgets gehören nicht zum MVP. Sie sind erst für eine V1 vorgesehen, die nicht mehr zur Abgabe gehört. Deshalb kommen sie in Klassen- und Komponentendiagramm nicht vor. Die folgende Beschreibung halten wir nur als Idee fest.
 
 Jede Rolle hat zwei Gadgets. Jedes Gadget lässt sich einmal pro Partie einsetzen.
 
 - **Dietrich für den Dieb:** Deckt eine Zahl des Codes mit ihrer Position auf.
-- **Rauchbombe für den Dieb:** Entfernt alle Spuren im Raum, den der Dieb zuletzt vollständig gelöst hat. Die Polizei kann dort keine Eingabehistorie mehr abrufen.
+- **Rauchbombe für den Dieb:** Entfernt alle Spuren an der Tür, durch die der Dieb zuletzt gegangen ist. Die Polizei kann dort keine Eingabehistorie mehr abrufen.
 - **Alarm für den Polizisten:** Ändert eine zufällige Stelle des Codes, an dem der Dieb gerade arbeitet.
 - **Fingerabdruck für den Polizisten:** Deckt eine im Code enthaltene Zahl ohne Position auf.
 
 Nach einem Alarm wird klar angezeigt, dass bisherige Versuche zum alten Code gehören. Bereits aufgedeckte Hinweise von Dietrich oder Fingerabdruck bleiben sichtbar, werden aber ebenfalls als veraltet markiert. Versuche nach dem Alarm beziehen sich auf den neuen Code und werden normal als Spuren hinterlassen.
 
+Vor einer Umsetzung wären noch zu klären:
+
+- **Alarm:** Muss der Polizist an dieser Tür später den neuen Code lösen? Erfährt jemand, welche Stelle sich geändert hat? Drei von vier Stellen bleiben gleich, die alten Spuren sind also teilweise noch brauchbar. Im Laufzeitmodell hat jede Tür bisher genau einen unveränderlichen Code; das müsste dafür angepasst werden.
+- **Fingerabdruck:** Gilt er für den Code, an dem der Polizist gerade arbeitet, oder für den Code, an dem der Dieb gerade arbeitet?
+- **Dietrich:** Sieht der Polizist den vom Dieb aufgedeckten Hinweis später an derselben Tür?
+
 ### Was wir an den Regeln noch klären müssen
 
 - **Startpositionen:** Ein möglicher Start wäre Polizei vor Tür 1 und Dieb vor Tür 3. Dafür fehlen zunächst echte Spuren an den ersten beiden Türen.
 - **Zeit und Eingaben:** Wie lange dauert eine Partie? Gibt es eine Pause zwischen eigenen Versuchen oder ein Versuchslimit?
-- **History:** Wann wird ein Versuch sichtbar, in welcher Reihenfolge werden Spuren gezeigt und kann der Polizist bereits gelesene Versuche erneut ansehen?
-- **Gleichzeitige Ereignisse:** Was gilt, wenn Codeeingabe, Alarm oder Zeitablauf fast gleichzeitig eintreten? Entscheidet wie beim Einholen die Verarbeitungsreihenfolge auf dem Server?Einzelfälle müssen noch festgehalten werden.
+- **History:** Die Spuren werden der Reihe nach einzeln gezeigt. Wann wird ein Versuch sichtbar und kann der Polizist bereits gelesene Versuche erneut ansehen?
+- **Gleichzeitige Ereignisse:** Was gilt, wenn Codeeingabe und Zeitablauf fast gleichzeitig eintreten? Entscheidet wie beim Einholen die Verarbeitungsreihenfolge auf dem Server? Einzelfälle müssen noch festgehalten werden.
+- **Abbruch und Verbindungsverlust:** Eine abgebrochene Partie wird mit dem Endgrund „abgebrochen" gespeichert und kann ohne Gewinner bleiben. Der Server merkt sich, ob ein Spieler verbunden ist. Zählt Verlassen als Niederlage? Gibt es eine Wartezeit für einen Reconnect?
 
 ### Umfang und erste Tests
 
 Zuerst bauen wir Codeeingabe und Auswertung, sechs Türen, Vorsprung, Countdown, Spuren und die Fangregel. Für die Übergänge reicht am Anfang eine kurze Türanimation; Videos kommen später.
 
-Danach ergänzen wir die Gadgets. Wir testen mit vertauschten Rollen und mit beiden Clients, ob der Polizist den Vorsprung aufholen kann und ob sich das Anschauen der Spuren lohnt. Countdown, Wartezeiten und Gadget-Stärke passen wir anhand dieser Partien an.
+Wir testen mit vertauschten Rollen und mit beiden Clients, ob der Polizist den Vorsprung aufholen kann und ob sich das Anschauen der Spuren lohnt. Countdown und Wartezeiten passen wir anhand dieser Partien an. Gadgets gehören nicht zu diesem Umfang.
 
 Die Idee passt gut zu unserem Projekt: Die Rätselregeln bleiben überschaubar, während die Verfolgung und die Spuren für Interaktion sorgen. Das größte offene Thema ist die Spielbalance.
 
@@ -71,8 +82,8 @@ Die Idee passt gut zu unserem Projekt: Die Rätselregeln bleiben überschaubar, 
 
 - Zwei angemeldete Personen können eine vollständige Partie spielen, auch wenn eine den JavaFX-Client und die andere den Web-Client nutzt.
 - Registrierung mit Benutzername und Passwort, Login und Logout funktionieren.
-- Spieler finden sich über eine Lobby und starten gemeinsam eine Partie.
-- Abgeschlossene Partien werden gespeichert. Jeder sieht seine Spielhistorie und einfache Auswertungen, etwa Siege und Niederlagen, Zeit und Anzahl der Versuche. Diese Spielhistorie ist getrennt von den Eingabespuren innerhalb einer Partie.
+- Spieler finden sich über eine Warteschlange. Sobald zwei Personen warten, startet der Server die Partie automatisch und lost die Rollen aus.
+- Abgeschlossene Partien werden gespeichert. Jeder sieht seine Spielhistorie und einfache Auswertungen: Siege und Niederlagen je Rolle, Zeit und Anzahl der Versuche. Einen zusätzlichen Punktestand gibt es nicht. Diese Spielhistorie ist getrennt von den Eingabespuren innerhalb einer Partie.
 - Profilbilder (hochladen, abrufen) decken den Punkt der sinnvollen Übertragung über die API und Anzeige im Client ab.
 - Alle Funktionen sind in beiden Clients über die grafische Oberfläche bedienbar.
 
@@ -82,7 +93,7 @@ Die Idee passt gut zu unserem Projekt: Die Rätselregeln bleiben überschaubar, 
 
 - Server und die beiden Clients sind getrennte Komponenten.
 - Der Server wird in Java umgesetzt.
-- Benutzer und Spielergebnisse liegen in einer relationalen Datenbank und werden über ein ORM verwaltet. Das Datenbankprodukt ist noch offen.
+- Benutzer, Profilbilder und Spielergebnisse liegen in einer relationalen Datenbank und werden über ein ORM verwaltet. Das Datenbankprodukt ist noch offen.
 - Die API unterstützt JWT; die allgemeine Prüfungsbeschreibung verlangt diese Unterstützung.
 - Die Server-Schnittstellen sind clientneutral: Beide Clients nutzen dieselben Endpunkte und Nachrichten, ohne Sonderwege für einen der beiden.
 - Wir setzen Entwurfs- und Architekturmuster dort ein, wo sie uns helfen, und können ihren Nutzen erklären.
@@ -90,7 +101,7 @@ Die Idee passt gut zu unserem Projekt: Die Rätselregeln bleiben überschaubar, 
 
 ### Geplante Werkzeuge
 
-Wir orientieren uns zunächst am Leitfaden: Spring Boot, Spring Security mit JWT, JPA, Git und Maven. REST mit JSON verwenden wir für Konten, Profilbilder und Spielhistorie; WebSocket mit STOMP für Lobby und Spielaktionen. Die Versionen legen wir beim Projektstart fest.
+Spring Boot ist für den Server laut Leitfaden Pflicht. Dazu orientieren wir uns am Leitfaden: Spring Security mit JWT, JPA, Git und Maven. REST mit JSON verwenden wir für Konten, Profilbilder und Spielhistorie; WebSocket mit STOMP für Warteschlange, Spielaktionen und Spuren. Beide Wege laufen verschlüsselt über HTTPS beziehungsweise WSS. Die Versionen legen wir beim Projektstart fest.
 
 Clients:
 
@@ -101,13 +112,21 @@ Beide Clients müssen mit unterschiedlichen Sprachen oder Frameworks und vollst�
 
 ### Zuständigkeiten im Spiel
 
-Der Server verwaltet Codes, Countdown, Positionen, Versuche und Gadgets. Er prüft Aktionen und entscheidet über Türöffnung, Einholen und Spielende. Jeder Client bekommt nur die Informationen, die seine Rolle sehen darf; geheime Codes werden nicht vollständig an die Clients geschickt. Die Clients stellen den Zustand nur dar und schicken Aktionen; Spiellogik doppeln wir dort nicht. Das hält auch die beiden Client-Implementierungen schlank.
+Der Server verwaltet Warteschlange, Codes, Countdown, Positionen und Versuche. Er prüft Aktionen und entscheidet über Türöffnung, Einholen und Spielende. Jeder Client bekommt nur die Informationen, die seine Rolle sehen darf; geheime Codes werden nicht vollständig an die Clients geschickt. Die Clients stellen den Zustand nur dar und schicken Aktionen; Spiellogik doppeln wir dort nicht. Das hält auch die beiden Client-Implementierungen schlank.
 
-Mögliche Ansatzpunkte für Patterns sind Spielphasen, Spielaktionen und Gadget-Verhalten auf dem Server sowie die Trennung von Darstellung und Zustand in den Clients. Die konkrete Auswahl treffen wir bei der Modellierung.
+Mögliche Ansatzpunkte für Patterns sind Spielphasen und Spielaktionen auf dem Server sowie die Trennung von Darstellung und Zustand in den Clients. Die konkrete Auswahl treffen wir bei der Modellierung.
+
+### Was wir technisch noch klären müssen
+
+- **Spuren-Wartezeit:** Die zwei Sekunden pro Versuch setzt der Server durch, indem er die Versuche einzeln ausliefert und sich je Polizist merkt, welche Spur als nächste dran ist und ab wann. Bekäme der Client alle Spuren auf einmal, ließe sich die Sperre zum Beispiel im Web-Client über die Entwicklertools umgehen. Offen ist noch das Nachrichtenformat.
+- **Videos:** Wer erstellt sie? Werden sie mit den Clients ausgeliefert oder vom Server geladen? Welches Format spielen JavaFX und Browser beide ab, zum Beispiel MP4 mit H.264?
+- **JWT über STOMP:** Wie wird der Token beim Verbindungsaufbau übergeben? Was passiert, wenn er während einer Partie abläuft? Wo legt der Web-Client den JWT ab?
+- **Countdown:** Der Server legt beim Start einen festen Endzeitpunkt fest. Die Clients können ihre Anzeige daraus berechnen. Wie gehen wir mit abweichenden Client-Uhren um?
+- **Mehrfache Anmeldung:** Ein Konto kann höchstens einmal in der Warteschlange stehen oder in einer laufenden Partie sein. Darf es trotzdem gleichzeitig in beiden Clients angemeldet sein?
 
 ## Termine und Abgaben
 
-Die Termine kommen aus dem Kursplan. Die Arbeitsschritte darunter sind unsere interne Planung.
+Die Termine kommen aus dem Kursplan. Die Arbeitsschritte darunter sind unsere interne Planung. Die Videochats (jeweils 19:00 Uhr) nutzen wir für Rückfragen und Reviews: 07.10., 21.10., 04.11., 18.11., 02.12., 16.12.2026 und 13.01.2027.
 
 - **28.09.2026 – Gruppenwahl**
 - **05.10.2026 – M0, Spielauswahl:** Cipher Chase mit klaren Regeln und begrenztem Umfang beschreiben, offene Fragen klären und das Thema abstimmen.
