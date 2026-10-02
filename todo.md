@@ -48,6 +48,7 @@ Beispiel:
 - [ ] Regelmäßigen Abstimmungstermin festlegen (bis dahin: sonntags)
 - [ ] Datenbankprodukt und Frameworkversionen festlegen
 - [ ] Beispielpartie auf Papier spielen
+- [ ] Schnittstellen in [team-und-schnittstellen.md](team-und-schnittstellen.md) von allen prüfen und gegebenenfalls anpassen (bis 25.10.2026)
 - [ ] Jeden Sonntag: Branches nach `main` zusammenführen und verbleibende Arbeit vergleichen
 
 ### Integration und Abgabe
