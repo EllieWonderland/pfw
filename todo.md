@@ -1,6 +1,6 @@
 # Mastermind – To-dos
 
-Stand: 02.10.2026
+Stand: 27.10.2026
 
 Grundlage sind [rahmenplan.md](rahmenplan.md) und [team-und-schnittstellen.md](team-und-schnittstellen.md). Diese Liste hält nur fest, wer was als Nächstes erledigt.
 
@@ -35,7 +35,7 @@ Beispiel:
 ### Meilensteine
 
 - [x] M0 – Spielauswahl abstimmen (05.10.2026) – erledigt 02.10.2026
-- [ ] M1 – UML-Klassendiagramm (19.10.2026)
+- [x] M1 – UML-Klassendiagramm (19.10.2026) – erledigt 19.10.2026
 - [ ] M2 – UML-Komponentendiagramm (02.11.2026)
 - [ ] M3 – Schnittstellenbeschreibung (16.11.2026)
 - [ ] M4 – Prototyp von Server und beiden Clients (04.01.2027)
@@ -47,8 +47,13 @@ Beispiel:
 - [ ] Branches `server`, `javaclient` und `vueclient` anlegen
 - [ ] Regelmäßigen Abstimmungstermin festlegen (bis dahin: sonntags)
 - [ ] Datenbankprodukt und Frameworkversionen festlegen
+- [ ] Datenbankprodukt und Versionen in [rahmenplan.md](rahmenplan.md) und [team-und-schnittstellen.md](team-und-schnittstellen.md) nachtragen (wartet auf: Datenbankprodukt und Frameworkversionen festlegen)
+- [ ] Web-Origin für CORS festlegen
+- [ ] HTTPS/WSS klären und einrichten (Zertifikat, Serverkonfiguration)
+- [ ] Patterns auswählen und begründen (02.11.2026)
+- [ ] Termin für finale Abgabe und Präsentation erfragen
 - [ ] Beispielpartie auf Papier spielen
-- [ ] Schnittstellen in [team-und-schnittstellen.md](team-und-schnittstellen.md) von allen prüfen und gegebenenfalls anpassen (bis 25.10.2026)
+- [x] Schnittstellen in [team-und-schnittstellen.md](team-und-schnittstellen.md) von allen prüfen und gegebenenfalls anpassen (bis 25.10.2026) – erledigt 06.10.2026
 - [ ] Jeden Sonntag: Branches nach `main` zusammenführen und verbleibende Arbeit vergleichen
 
 ### Integration und Abgabe
@@ -58,23 +63,35 @@ Beispiel:
 - [ ] Testpartien mit vertauschten Rollen: Vorsprung, Spielzeit und Zwei-Sekunden-Sperre bewerten
 - [ ] Diagramme und Schnittstellenbeschreibung an den fertigen Stand angleichen
 - [ ] Präsentation und Live-Demo proben
+- [ ] Abgabestand in Git eindeutig kennzeichnen (z. B. mit einem Tag)
 
 ## Manu – Server (`server`)
 
 - [ ] Spring-Boot-Projekt mit Maven anlegen, startbar machen
-- [ ] Datenbankprodukt vorschlagen und JPA-Anbindung einrichten
+- [x] Datenbankprodukt vorschlagen und JPA-Anbindung einrichten – erledigt 25.10.2026
+- [ ] Fehler: Parameterlosen Konstruktor in `User` ergänzen (von JPA benötigt)
 - [ ] Registrierung, Login, Logout mit JWT und widerrufbarer Sitzung
-- [ ] CORS für die Web-Origin einrichten
+- [ ] Passwörter gehasht speichern
+- [ ] CORS für die Web-Origin einrichten (wartet auf: Web-Origin festlegen)
 - [ ] Profilbild hochladen und abrufen
 - [ ] STOMP-Endpunkt `/ws` mit Authentifizierung im CONNECT-Frame
+- [ ] Nur eine STOMP-Verbindung pro Konto (`CONNECTION_ALREADY_ACTIVE`), höchstens einmal wartend oder in einer Partie
 - [ ] Warteschlange und automatisches Zusammenführen mit zufälligen Rollen
-- [ ] Codeauswertung (Grün/Orange, Wiederholungszahlen) mit Tests
+- [x] Codeauswertung (Grün/Orange, Wiederholungszahlen) mit Tests – erledigt 13.10.2026
+- [ ] Fehler: `submitGuess` gibt nur Orange zurück, Grün fehlt
 - [ ] Türöffnung, Fangregel, Countdown und Spielende
+- [ ] Fehler: Timer in `GameSession` läuft im 240-Sekunden-Takt und zählt nur um 1 herunter, Zeitablauf greift praktisch nie
+- [ ] Fehler: `GameSession` legt 7 statt 6 Türen an
+- [ ] Fehler: Spielende kann mehrfach gemeldet werden (Partie muss genau einmal enden)
+- [ ] Bewusstes Verlassen (`/app/game/leave`) und Logout während einer Partie als Niederlage werten
 - [ ] Spuren mit Lesefortschritt und Zwei-Sekunden-Sperre
 - [ ] Persönliche Zustände (`GAME_STATE`, `GAME_FINISHED`, `ACTION_RESULT`)
 - [ ] Wiederholte Aufträge über `requestId` abfangen
+- [ ] Einheitliches Fehlerformat und Fehlercodes nach Abschnitt 7 des Vertrags
+- [ ] Technische Begrenzung gegen Nachrichtenfluten (`RATE_LIMITED`)
 - [ ] Verbindungsabbruch, Reconnect-Frist und Abbruch bei Serverneustart
 - [ ] Ergebnisse speichern, Spielhistorie und Statistik über REST
+- [ ] Tests für Spielregeln und Schnittstellen
 - [ ] Build-, Konfigurations- und Startanleitung für den Server
 
 ## Jana – Vue-Client (`vueclient`)
@@ -91,7 +108,9 @@ Beispiel:
 - [ ] Ergebnisanzeige, Spielhistorie und Statistik
 - [ ] Verbindungsverlust: Aktionen sperren, neu verbinden, synchronisieren
 - [ ] Fehleranzeige anhand der Fehlercodes
+- [ ] Partie verlassen sowie Logout und abgelaufene Sitzung (`AUTH_EXPIRED`) behandeln
 - [ ] Kurze Türanimation
+- [ ] Clientprüfungen (Tests)
 - [ ] Build- und Startanleitung für den Web-Client
 - [ ] Koordination: Bedienkonzept und gemeinsame Medien abstimmen
 
@@ -110,7 +129,9 @@ Beispiel:
 - [ ] Ergebnisanzeige, Spielhistorie und Statistik
 - [ ] Verbindungsverlust: Aktionen sperren, neu verbinden, synchronisieren
 - [ ] Fehleranzeige anhand der Fehlercodes
+- [ ] Partie verlassen sowie Logout und abgelaufene Sitzung (`AUTH_EXPIRED`) behandeln
 - [ ] Kurze Türanimation
+- [ ] Clientprüfungen (Tests)
 - [ ] Build- und Startanleitung für den Desktop-Client
 - [ ] Koordination: Testfälle für Partien zwischen beiden Clients
 
